@@ -32,7 +32,7 @@ let validarTarjeta = (cantDigitos, nomenclatura) =>{
     if (!nomenclatura.test(numeroTarjeta))
       errores += `· El número de su tarjeta de crédito no comienza por la nomenclatura correspondiente.\n`;
   
-    if (errores == "") {
+    if (!errores) {
       alert("Su tarjeta de crédito es válida.")
       return;
     } else alert(`Su tarjeta de crédito es inválida:\n${errores}`)
