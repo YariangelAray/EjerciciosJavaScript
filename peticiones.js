@@ -22,19 +22,33 @@ const obtenerInformacion = async (url) => {
     
         let datosUsuarios = await Promise.all( usuarios.map( async (usuario) => {
     
-            let datosPosts = await solicitarPosts(usuario.id);
+            let posts = await solicitarPosts(usuario.id);
     
-            let posts = await Promise.all( datosPosts.map ( async (post) => {
+            let datosPosts = await Promise.all( posts.map ( async (post) => {
     
                 let comentarios = await solicitarComentarios(post.id);
     
-                return {...post, comentarios};
+                return {
+                    titulo: post.title,
+                    contenido: post.body,
+                    comentarios: comentarios.map((comentario) => (
+                        {nombre: comentario.name,
+                        comentario: comentario.body}
+                    ))
+                };
+
             }));
     
-            return {...usuario, posts};
+            return {
+                id: usuario.id,
+                nombre: usuario.name,
+                posts: datosPosts
+            };
+
         }));
      
         return datosUsuarios;
+
     } catch (error) {
         throw new Error("Ha ocurrido un error en las peticiones: " + error);
     }
